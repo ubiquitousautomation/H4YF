@@ -1,0 +1,89 @@
+{
+  "version": "1.0",
+  "metadata": {
+    "project": "H4YF",
+    "description": "HEAT4YAFEAT Brand Establishment and eCommerce",
+    "created": "2026-06-13",
+    "last_updated": "2026-06-13"
+  },
+  "nodes": [
+    {
+      "id": "h4yf-brand-001",
+      "type": "Entity",
+      "name": "H4YF (HEAT4YAFEAT)",
+      "description": "Core brand entity — eCommerce brand establishment project",
+      "created": "2026-06-13",
+      "tags": ["brand", "core"],
+      "properties": {}
+    },
+    {
+      "id": "kg-arch-001",
+      "type": "Decision",
+      "name": "Knowledge Graph Architecture",
+      "description": "Adopted file-based JSON knowledge graph with Python CLI for persistent cross-session memory. Stored in .claude/knowledge-graph.json and committed to git for versioning.",
+      "created": "2026-06-13",
+      "tags": ["architecture", "memory", "harness"],
+      "properties": {
+        "rationale": "Richer persistent memory across sessions without external service dependencies",
+        "alternatives_considered": [
+          "Neo4j (requires running server)",
+          "FalkorDB (requires Redis)",
+          "Flat JSONL transcripts (non-queryable, no entity relationships)"
+        ]
+      }
+    },
+    {
+      "id": "harness-001",
+      "type": "Component",
+      "name": "Claude Code Harness",
+      "description": "SessionStart/Stop hooks, skills, and MCP servers that govern the development workflow. Global hooks handle git identity and commit validation; project hooks regenerate CONTEXT.md from the knowledge graph.",
+      "created": "2026-06-13",
+      "tags": ["infrastructure", "harness"],
+      "properties": {
+        "global_hooks": [
+          "SessionStart: git identity assertion (session-start-git-identity.sh)",
+          "Stop: uncommitted change validation (stop-hook-git-check.sh)"
+        ],
+        "project_hooks": [
+          "SessionStart: knowledge graph → CONTEXT.md regeneration"
+        ],
+        "mcp_servers": ["file-ops", "github"]
+      }
+    },
+    {
+      "id": "kg-tool-001",
+      "type": "Component",
+      "name": "Knowledge Graph CLI (kg.py)",
+      "description": "Python CLI at .claude/scripts/kg.py for querying and updating the knowledge graph. Subcommands: summary, add-node, add-edge, list, query.",
+      "created": "2026-06-13",
+      "tags": ["tooling", "knowledge-graph"],
+      "properties": {
+        "path": ".claude/scripts/kg.py",
+        "dependencies": "Python 3 stdlib only"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "kg-arch-001",
+      "target": "harness-001",
+      "relationship": "part_of",
+      "created": "2026-06-13",
+      "notes": "Knowledge graph is an enhancement layered onto the Claude Code harness"
+    },
+    {
+      "source": "kg-tool-001",
+      "target": "kg-arch-001",
+      "relationship": "implements",
+      "created": "2026-06-13",
+      "notes": "kg.py is the concrete implementation of the graph architecture"
+    },
+    {
+      "source": "harness-001",
+      "target": "h4yf-brand-001",
+      "relationship": "relates_to",
+      "created": "2026-06-13",
+      "notes": "Harness drives development of the H4YF brand platform"
+    }
+  ]
+}
