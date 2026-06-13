@@ -1,10 +1,10 @@
 {
-  "version": "1.0",
+  "version": "1.1",
   "metadata": {
     "project": "H4YF",
     "description": "HEAT4YAFEAT Brand Establishment and eCommerce",
-    "created": "2026-06-13",
-    "last_updated": "2026-06-13"
+    "created": "2026-06-13T16:09:00Z",
+    "last_updated": "2026-06-13T16:55:00Z"
   },
   "nodes": [
     {
@@ -12,17 +12,21 @@
       "type": "Entity",
       "name": "H4YF (HEAT4YAFEAT)",
       "description": "Core brand entity — eCommerce brand establishment project",
-      "created": "2026-06-13",
+      "status": "active",
+      "created": "2026-06-13T16:09:00Z",
       "tags": ["brand", "core"],
+      "session_created": "bootstrap",
       "properties": {}
     },
     {
       "id": "kg-arch-001",
       "type": "Decision",
       "name": "Knowledge Graph Architecture",
-      "description": "Adopted file-based JSON knowledge graph with Python CLI for persistent cross-session memory. Stored in .claude/knowledge-graph.json and committed to git for versioning.",
-      "created": "2026-06-13",
+      "description": "File-based JSON knowledge graph with Python CLI for persistent cross-session memory. Stored in .claude/knowledge-graph.json, committed to git for versioning. No external services required.",
+      "status": "active",
+      "created": "2026-06-13T16:09:00Z",
       "tags": ["architecture", "memory", "harness"],
+      "session_created": "bootstrap",
       "properties": {
         "rationale": "Richer persistent memory across sessions without external service dependencies",
         "alternatives_considered": [
@@ -36,16 +40,19 @@
       "id": "harness-001",
       "type": "Component",
       "name": "Claude Code Harness",
-      "description": "SessionStart/Stop hooks, skills, and MCP servers that govern the development workflow. Global hooks handle git identity and commit validation; project hooks regenerate CONTEXT.md from the knowledge graph.",
-      "created": "2026-06-13",
+      "description": "SessionStart/Stop hooks, skills, and MCP servers governing the development workflow. Global hooks: git identity + commit validation. Project hooks: knowledge graph lifecycle (CONTEXT.md regeneration, auto-commit on stop).",
+      "status": "active",
+      "created": "2026-06-13T16:09:00Z",
       "tags": ["infrastructure", "harness"],
+      "session_created": "bootstrap",
       "properties": {
         "global_hooks": [
           "SessionStart: git identity assertion (session-start-git-identity.sh)",
-          "Stop: uncommitted change validation (stop-hook-git-check.sh)"
+          "Stop: uncommitted change + push validation (stop-hook-git-check.sh)"
         ],
         "project_hooks": [
-          "SessionStart: knowledge graph → CONTEXT.md regeneration"
+          "SessionStart: validate graph, regenerate CONTEXT.md, export KG_SESSION_ID",
+          "Stop: auto-commit and push graph if dirty"
         ],
         "mcp_servers": ["file-ops", "github"]
       }
@@ -54,12 +61,44 @@
       "id": "kg-tool-001",
       "type": "Component",
       "name": "Knowledge Graph CLI (kg.py)",
-      "description": "Python CLI at .claude/scripts/kg.py for querying and updating the knowledge graph. Subcommands: summary, add-node, add-edge, list, query.",
-      "created": "2026-06-13",
+      "description": "Python CLI at .claude/scripts/kg.py. Subcommands: summary, add-node, update-node, remove-node, add-edge, list, query, neighbors, validate, init. Python stdlib only — no pip installs.",
+      "status": "active",
+      "created": "2026-06-13T16:09:00Z",
       "tags": ["tooling", "knowledge-graph"],
+      "session_created": "bootstrap",
       "properties": {
         "path": ".claude/scripts/kg.py",
         "dependencies": "Python 3 stdlib only"
+      }
+    },
+    {
+      "id": "hooks-runner-001",
+      "type": "Component",
+      "name": "Cross-platform Hook Runner (hooks.py)",
+      "description": "Single Python entry point for all Claude Code project hooks (.claude/scripts/hooks.py). Handles session-start (validate, regenerate CONTEXT.md, export session ID) and session-stop (auto-commit/push graph if dirty). Uses sys.executable — no PATH assumptions, works on Mac/Linux/Windows.",
+      "status": "active",
+      "created": "2026-06-13T16:55:00Z",
+      "tags": ["tooling", "harness", "hooks", "cross-platform"],
+      "session_created": "bootstrap",
+      "properties": {
+        "path": ".claude/scripts/hooks.py",
+        "replaces": "session-start.sh (bash)",
+        "platforms": ["Mac", "Linux", "Windows"],
+        "dependencies": "Python 3 stdlib only"
+      }
+    },
+    {
+      "id": "decision-python-hooks-001",
+      "type": "Decision",
+      "name": "Python Hook Runner over Bash",
+      "description": "Chose Python (hooks.py) over bash scripts for hooks to achieve device/platform/model-agnostic harness. Bash scripts excluded Windows; Python 3 is available on all Claude Code platforms.",
+      "status": "active",
+      "created": "2026-06-13T16:55:00Z",
+      "tags": ["architecture", "harness", "cross-platform"],
+      "session_created": "bootstrap",
+      "properties": {
+        "rationale": "Platform agnostic — same code runs on Mac desktop, Linux CLI, Windows desktop, and web/remote environments",
+        "tradeoff": "Requires Python 3 on PATH as 'python3' (Mac/Linux) or via equivalent on Windows"
       }
     }
   ],
@@ -68,22 +107,43 @@
       "source": "kg-arch-001",
       "target": "harness-001",
       "relationship": "part_of",
-      "created": "2026-06-13",
+      "created": "2026-06-13T16:09:00Z",
       "notes": "Knowledge graph is an enhancement layered onto the Claude Code harness"
     },
     {
       "source": "kg-tool-001",
       "target": "kg-arch-001",
       "relationship": "implements",
-      "created": "2026-06-13",
+      "created": "2026-06-13T16:09:00Z",
       "notes": "kg.py is the concrete implementation of the graph architecture"
     },
     {
       "source": "harness-001",
       "target": "h4yf-brand-001",
       "relationship": "relates_to",
-      "created": "2026-06-13",
+      "created": "2026-06-13T16:09:00Z",
       "notes": "Harness drives development of the H4YF brand platform"
+    },
+    {
+      "source": "hooks-runner-001",
+      "target": "harness-001",
+      "relationship": "part_of",
+      "created": "2026-06-13T16:55:00Z",
+      "notes": "hooks.py is the project-level hook layer within the harness"
+    },
+    {
+      "source": "hooks-runner-001",
+      "target": "kg-tool-001",
+      "relationship": "depends_on",
+      "created": "2026-06-13T16:55:00Z",
+      "notes": "hooks.py calls kg.py for validate and summary operations"
+    },
+    {
+      "source": "decision-python-hooks-001",
+      "target": "hooks-runner-001",
+      "relationship": "implements",
+      "created": "2026-06-13T16:55:00Z",
+      "notes": "hooks.py is the implementation of the cross-platform hook decision"
     }
   ]
 }
