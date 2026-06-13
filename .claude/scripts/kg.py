@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 """Knowledge graph CLI — portable cross-session memory for Claude Code projects.
 
+Platform-agnostic: Python 3 stdlib only. Runs on Mac, Linux, Windows, web,
+desktop, CLI, and any future Claude Code surface without modification.
+
 Usage:
   kg.py summary               Print CONTEXT.md (pipe to file: kg.py summary > CONTEXT.md)
+  kg.py diff                  Show what changed in the graph since the last git commit
   kg.py add-node TYPE NAME DESC    Add a node (TYPE: Decision Component Feature Entity Concept)
   kg.py update-node ID FIELD VAL   Update a node field (name | description | status)
   kg.py remove-node ID             Remove a node and all its edges
@@ -19,6 +23,7 @@ Status values: active  deprecated  superseded
 """
 
 import json
+import subprocess
 import sys
 import os
 import uuid
@@ -289,6 +294,75 @@ def cmd_neighbors(graph, args):
         print("  (no edges)")
 
 
+def cmd_diff(graph):
+    """Show nodes and edges added/removed/updated since the last git commit."""
+    repo_r = subprocess.run(
+        ['git', 'rev-parse', '--show-toplevel'],
+        capture_output=True, text=True,
+    )
+    if repo_r.returncode != 0:
+        sys.exit('Not inside a git repo — cannot diff.')
+
+    repo   = repo_r.stdout.strip()
+    rel    = os.path.relpath(GRAPH_PATH, repo)
+    prev_r = subprocess.run(
+        ['git', 'show', f'HEAD:{rel}'],
+        capture_output=True, text=True, cwd=repo,
+    )
+    if prev_r.returncode != 0:
+        print('Graph has no committed version to diff against.')
+        return
+
+    try:
+        old = json.loads(prev_r.stdout)
+    except json.JSONDecodeError:
+        sys.exit('Could not parse committed graph version.')
+
+    old_nodes = {n['id']: n for n in old.get('nodes', [])}
+    new_nodes = {n['id']: n for n in graph.get('nodes', [])}
+    old_edges = {(e['source'], e['target'], e['relationship']) for e in old.get('edges', [])}
+    new_edges = {(e['source'], e['target'], e['relationship']) for e in graph.get('edges', [])}
+
+    added   = [n for nid, n in new_nodes.items() if nid not in old_nodes]
+    removed = [n for nid, n in old_nodes.items() if nid not in new_nodes]
+    changed = [
+        new_nodes[nid] for nid in new_nodes
+        if nid in old_nodes and new_nodes[nid] != old_nodes[nid]
+    ]
+    e_added   = new_edges - old_edges
+    e_removed = old_edges - new_edges
+
+    if not any([added, removed, changed, e_added, e_removed]):
+        print('No changes since last commit.')
+        return
+
+    node_map     = {n['id']: n for n in graph.get('nodes', [])}
+    old_node_map = {n['id']: n for n in old.get('nodes', [])}
+
+    if added:
+        print(f'+ {len(added)} node(s) added:')
+        for n in added:
+            print(f'    + [{n["id"][:8]}] {n["type"]}: {n["name"]}')
+    if removed:
+        print(f'- {len(removed)} node(s) removed:')
+        for n in removed:
+            print(f'    - [{n["id"][:8]}] {n["type"]}: {n["name"]}')
+    if changed:
+        print(f'~ {len(changed)} node(s) updated:')
+        for n in changed:
+            old_n  = old_nodes[n['id']]
+            fields = [f for f in ('name', 'description', 'status', 'tags') if n.get(f) != old_n.get(f)]
+            print(f'    ~ [{n["id"][:8]}] {n["type"]}: {n["name"]} (changed: {", ".join(fields)})')
+    if e_added:
+        print(f'+ {len(e_added)} edge(s) added:')
+        for src, tgt, rel in sorted(e_added):
+            print(f'    + {node_map.get(src, {}).get("name", src[:8])} --{rel}--> {node_map.get(tgt, {}).get("name", tgt[:8])}')
+    if e_removed:
+        print(f'- {len(e_removed)} edge(s) removed:')
+        for src, tgt, rel in sorted(e_removed):
+            print(f'    - {old_node_map.get(src, {}).get("name", src[:8])} --{rel}--> {old_node_map.get(tgt, {}).get("name", tgt[:8])}')
+
+
 def cmd_validate(graph):
     errors = []
     node_ids = {n['id'] for n in graph['nodes']}
@@ -363,6 +437,7 @@ def main():
 
     dispatch = {
         'summary':     lambda: cmd_summary(graph),
+        'diff':        lambda: cmd_diff(graph),
         'add-node':    lambda: cmd_add_node(graph, args),
         'update-node': lambda: cmd_update_node(graph, args),
         'remove-node': lambda: cmd_remove_node(graph, args),

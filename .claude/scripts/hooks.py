@@ -110,6 +110,23 @@ def session_stop(repo_root: Path) -> None:
     if not graph_is_dirty(repo_root, graph_rel):
         return  # nothing to do
 
+    # Session summary — show what this session contributed
+    session_id = os.environ.get('KG_SESSION_ID', '')
+    graph_data = json.loads(graph_path.read_text(encoding='utf-8'))
+    session_nodes = [
+        n for n in graph_data.get('nodes', [])
+        if session_id and n.get('session_created') == session_id
+    ]
+    if session_nodes:
+        print(f'[kg] This session added {len(session_nodes)} node(s):')
+        for n in session_nodes:
+            print(f'     + [{n["id"][:8]}] {n["type"]}: {n["name"]}')
+
+    # Delta summary for commit message
+    diff_out, _, _ = kg(repo_root, 'diff')
+    delta_lines = [ln for ln in (diff_out or '').splitlines() if ln.strip()]
+    delta_summary = '; '.join(delta_lines[:3]) if delta_lines else 'graph updated'
+
     print('[kg] Knowledge graph has uncommitted changes — auto-committing')
 
     # Regenerate CONTEXT.md from the updated graph
@@ -123,7 +140,7 @@ def session_stop(repo_root: Path) -> None:
     now = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
     result = git_run(
         repo_root, 'git', 'commit',
-        '-m', f'chore: update knowledge graph [auto-commit {now}]',
+        '-m', f'chore: update knowledge graph [auto-commit {now}] — {delta_summary}',
     )
 
     if result.returncode != 0:
