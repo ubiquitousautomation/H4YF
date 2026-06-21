@@ -6,7 +6,7 @@
 _(none)_
 
 ## Todo — Setup (must complete in order)
-- [ ] Fix Stop hook: remove hardcoded `/home/user/H4YF` path in `.claude/settings.json` (needs user auth to edit harness)
+- [x] 2026-06-21 — Fix Stop hook: removed hardcoded path from `.claude/settings.json`
 - [ ] Configure rclone `gdrive` remote — run `./scripts/setup-drive.sh` (needs browser for Google OAuth)
 - [ ] Run initial Drive sync — `./scripts/drive-sync.sh push`
 - [ ] Verify Gemini can access files at `H4YF/ai-context/` on Google Drive

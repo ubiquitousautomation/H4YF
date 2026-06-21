@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd /home/user/H4YF && bash scripts/drive-sync.sh push 2>&1 | tail -8"
+            "command": "bash scripts/drive-sync.sh push 2>&1 | tail -8"
           }
         ]
       }
