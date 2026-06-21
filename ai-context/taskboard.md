@@ -19,8 +19,9 @@ _(none)_
 - [ ] PostToolUse auto-commit hook — deferred; manual pull workflow sufficient for now
 
 ## Todo — H4YF Project
-- [ ] Define brand identity (name, voice, visual direction)
-- [ ] Choose eCommerce platform (Shopify / custom / other)
+- [ ] Fill in `docs/brand-brief.md` — name, business, personality, visual direction, eCommerce, launch goals
+- [ ] Copy brand facts to `ai-context/memory.md` once brief is settled
+- [ ] Choose eCommerce platform (brief section 5)
 - [ ] Set up domain and hosting
 - [ ] Create product catalog structure
 - [ ] Design brand assets (logo, color palette, typography)
@@ -35,6 +36,8 @@ _(none)_
 - [x] 2026-06-21 — Conflict resolution strategy documented in harness.md
 - [x] 2026-06-21 — Session log for this session written to sessions/2026-06-21-claude.md
 - [x] 2026-06-21 — Handoff updated to current state
+- [x] 2026-06-21 — memory.md updated with full session learnings (Windows env, rclone decisions, conventions)
+- [x] 2026-06-21 — docs/brand-brief.md created as brand discovery template
 
 ## Backlog
 - [ ] Payment processing integration
