@@ -25,6 +25,18 @@
 - All date entries use `YYYY-MM-DD` format
 - Don't delete from `memory.md` — mark stale entries `[SUPERSEDED]` instead
 
+## Conflict Resolution
+Sequential work is assumed — one agent works at a time. If both agents edit
+the same file before a sync, the following rules apply:
+
+- **`push` / `pull`** (rclone copy): additive only, never overwrites — no true conflict possible
+- **`bisync`**: rclone's default is last-modified-wins; use only when you know what changed
+- **Real conflict** (same file edited on both sides between syncs): human decides — do not let
+  either agent silently overwrite; run `./scripts/drive-sync.sh status` to inspect, then
+  manually merge or pick a winner before the next push/pull
+
+**Best practice**: finish your session and push/pull before the other agent starts.
+
 ## Drive Sync
 - Local: `ai-context/` in this git repo
 - Remote: `gdrive:H4YF/ai-context` (rclone remote `gdrive`)

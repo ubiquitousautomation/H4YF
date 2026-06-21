@@ -4,6 +4,10 @@
 # rclone bisync tracking DB
 .cache/
 
+# Session logs are tracked in git so Claude can read Gemini's session history after a pull.
+# To keep them Drive-only instead, uncomment the line below:
+# ai-context/sessions/*.md
+
 # Local env / credentials — never commit these
 .env
 *.secret

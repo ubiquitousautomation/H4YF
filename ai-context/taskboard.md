@@ -13,10 +13,10 @@ _(none)_
 - [ ] Merge branch `claude/gemini-offline-drive-sync-gur4we` → main
 
 ## Todo — Alignment Fixes (from session review 2026-06-21)
-- [ ] Decide conflict resolution strategy: what wins when both agents edit the same file simultaneously? Document in `ai-context/harness.md`
-- [ ] Add `ai-context/sessions/*.md` to `.gitignore` if session logs grow large (currently tracked in git)
+- [x] 2026-06-21 — Conflict resolution strategy documented in `harness.md` (sequential work assumed; human decides on true conflicts)
+- [x] 2026-06-21 — Session log gitignore policy decided: tracked in git by default, opt-out documented in `.gitignore`
 - [ ] Test bisync `--first-run` detection on actual machine with rclone installed
-- [ ] Consider adding a PostToolUse hook to commit `ai-context/` changes to git automatically after each Drive pull
+- [ ] PostToolUse auto-commit hook — deferred; manual pull workflow sufficient for now
 
 ## Todo — H4YF Project
 - [ ] Define brand identity (name, voice, visual direction)
@@ -31,7 +31,10 @@ _(none)_
 - [x] 2026-06-21 — Write Google Drive sync scripts (rclone)
 - [x] 2026-06-21 — Configure Claude Code Stop hook for auto-push to Drive
 - [x] 2026-06-21 — Add CLAUDE.md and GEMINI.md entrypoints
-- [x] 2026-06-21 — Session alignment review: fixed 5 bugs (push safety, bisync first-run, setup-drive --all flag, GEMINI.md pull claim, .gitignore)
+- [x] 2026-06-21 — Session alignment review: fixed 6 bugs (push safety, bisync first-run, setup-drive --all flag, GEMINI.md pull claim, .gitignore, hardcoded Stop hook path)
+- [x] 2026-06-21 — Conflict resolution strategy documented in harness.md
+- [x] 2026-06-21 — Session log for this session written to sessions/2026-06-21-claude.md
+- [x] 2026-06-21 — Handoff updated to current state
 
 ## Backlog
 - [ ] Payment processing integration
