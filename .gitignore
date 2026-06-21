@@ -1,0 +1,10 @@
+# Sync log — can grow large, not needed in history
+.claude/sync.log
+
+# rclone bisync tracking DB
+.cache/
+
+# Local env / credentials — never commit these
+.env
+*.secret
+rclone.conf

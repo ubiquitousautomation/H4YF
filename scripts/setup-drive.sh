@@ -27,9 +27,7 @@ else
   echo ""
   # Non-interactive: create a Drive remote via rclone config create
   # For headless/server environments, use --auth-no-open-browser and paste the URL
-  rclone config create gdrive drive \
-    scope "drive" \
-    --all
+  rclone config create gdrive drive scope drive
 fi
 
 echo ""

@@ -31,6 +31,7 @@ All context files are under `H4YF/ai-context/` in the shared Google Drive.
 - Use the taskboard; don't track tasks in handoff
 
 ## Sync Note
-Changes you make on Google Drive will be pulled into the git repo automatically
-when a Claude Code session starts. Changes Claude makes will be pushed to Drive
-when Claude's session ends.
+Changes Claude makes are pushed to Drive automatically when Claude's session ends.
+Changes YOU make on Drive are pulled into the git repo manually — Claude runs
+`./scripts/drive-sync.sh pull` at the start of a session when it knows you've
+made Drive-side edits. There is no automatic pull-on-start.
