@@ -7,9 +7,10 @@ _(none)_
 
 ## Todo — Setup (must complete in order)
 - [x] 2026-06-21 — Fix Stop hook: removed hardcoded path from `.claude/settings.json`
-- [ ] Configure rclone `gdrive` remote — run `./scripts/setup-drive.sh` (needs browser for Google OAuth)
-- [ ] Run initial Drive sync — `./scripts/drive-sync.sh push`
-- [ ] Verify Gemini can access files at `H4YF/ai-context/` on Google Drive
+- [x] 2026-06-21 — Install rclone in Linux container (via apt)
+- [x] 2026-06-21 — Configure rclone `gdrive` remote with OAuth token
+- [x] 2026-06-21 — Run initial Drive sync — 7 files pushed to `gdrive:H4YF/ai-context`
+- [x] 2026-06-21 — Verified files visible at `gdrive:H4YF/ai-context` ✓
 - [ ] Merge branch `claude/gemini-offline-drive-sync-gur4we` → main
 
 ## Todo — Alignment Fixes (from session review 2026-06-21)
