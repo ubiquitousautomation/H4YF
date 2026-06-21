@@ -1,0 +1,22 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /home/user/H4YF && bash scripts/drive-sync.sh push 2>&1 | tail -8"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(bash scripts/drive-sync.sh*)",
+      "Bash(bash scripts/setup-drive.sh*)",
+      "Bash(rclone*)"
+    ]
+  }
+}
