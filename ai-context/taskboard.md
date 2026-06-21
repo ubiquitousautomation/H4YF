@@ -2,6 +2,24 @@
 
 > Update status here whenever a task changes. Use `handoff.md` for session narrative.
 
+## Next Session Prompt
+
+> Paste this at the start of the next Claude or Gemini session.
+
+```
+Read ai-context/handoff.md and ai-context/taskboard.md first.
+
+Current state: Drive sync is live (gdrive:H4YF/ai-context), rclone is
+configured in the container, PR #5 is merged into main. All infrastructure
+is complete.
+
+Session goal: Work through docs/brand-brief.md with the user to define
+H4YF brand identity — name meaning, business description, target customer,
+brand personality, visual direction, eCommerce platform choice, and launch
+goals. Record confirmed facts in ai-context/memory.md as we go. Update
+taskboard.md when items are checked off. Push to Drive at session end.
+```
+
 ## In Progress
 _(none)_
 
