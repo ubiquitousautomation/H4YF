@@ -1,0 +1,163 @@
+SESSION NOTES — H4YF Gemini Offline Drive Sync
+Date: 2026-06-21
+Branch: claude/gemini-offline-drive-sync-gur4we
+PR: https://github.com/ubiquitousautomation/H4YF/pull/5
+
+================================================================================
+PROBLEM
+================================================================================
+
+The repo was empty (only a README). Gemini needed a way to access shared
+context files — harness config, memory, handoff state, taskboard, session logs
+— both offline and in sync with the rest of the team. Claude Code sessions live
+in ephemeral cloud containers, so any shared context had to be both git-tracked
+(for version history and Claude access) and on Google Drive (for Gemini access).
+
+================================================================================
+STRATEGY
+================================================================================
+
+Single source of truth in git under ai-context/. A rclone sync layer mirrors
+that directory to Google Drive so Gemini can read and write it without touching
+git. Claude auto-pushes to Drive at session end via a Stop hook; Gemini edits
+land on Drive and get pulled back at the start of the next Claude session.
+
+No separate database, no API calls, no custom server. Just files, git, and
+rclone. Both agents speak the same protocol through the same five files.
+
+================================================================================
+RATIONALE — KEY DECISIONS
+================================================================================
+
+1. Five files, not one big blob
+   Splitting into harness / memory / handoff / taskboard / sessions keeps each
+   file focused and small. Handoff stays under 500 words (current state only).
+   Memory is append-only (never loses history). Taskboard tracks tasks so
+   handoff stays narrative. Sessions archives detail so the other files stay
+   readable.
+
+2. rclone, not Google Drive for Desktop
+   This runs in a headless Linux cloud container. Drive for Desktop requires a
+   GUI. rclone is a CLI tool, works everywhere, supports push/pull/bisync, and
+   is the standard choice for server-side Drive access.
+
+3. Remote named gdrive (not a hard path)
+   Using a named remote means the scripts work on any machine where rclone is
+   configured, not just the current container. Swap machines, reconfigure once.
+
+4. Stop hook for auto-push
+   Claude Code fires the Stop event when a session ends. Hooking into it means
+   Drive is updated automatically — no manual step to forget. The push is just
+   rclone sync (local wins), so it is safe to run repeatedly.
+
+5. Pull is manual (not a Start hook)
+   Claude Code does not have a reliable Start hook. A manual pull at session
+   start is the right pattern: run it when you know Gemini has made changes.
+   The CLAUDE.md protocol documents this clearly.
+
+6. git tracks everything
+   ai-context/ is committed to git. This gives a full audit trail of every
+   change any agent made, lets you diff across sessions, and means Drive is a
+   secondary sync layer rather than the primary store.
+
+================================================================================
+WHAT I EXECUTED
+================================================================================
+
+1. Created directory structure
+      ai-context/
+        harness.md
+        memory.md
+        handoff.md
+        taskboard.md
+        sessions/
+          .gitkeep
+          README.md  (session log template)
+      scripts/
+        drive-sync.sh   (push / pull / bisync / status)
+        setup-drive.sh  (one-time rclone + Google OAuth)
+      .claude/
+        settings.json   (Stop hook + rclone permissions)
+      CLAUDE.md         (Claude session protocol)
+      GEMINI.md         (Gemini session protocol)
+
+2. drive-sync.sh wraps rclone with logging to .claude/sync.log
+   Modes: push (local -> Drive), pull (Drive -> local), bisync (two-way),
+   status (diff only). Defaults to push when called with no argument.
+
+3. setup-drive.sh installs rclone if missing and runs rclone config create
+   to authenticate with Google Drive interactively.
+
+4. .claude/settings.json Stop hook runs drive-sync.sh push automatically
+   when Claude Code session ends. Also whitelists the script and rclone
+   commands so they do not trigger permission prompts.
+
+5. Committed all 11 files to branch claude/gemini-offline-drive-sync-gur4we
+   and pushed. Opened draft PR #5.
+
+6. Checked PR CI and review comments — no workflows exist yet, nothing to act on.
+
+================================================================================
+YOUR NEXT STEPS
+================================================================================
+
+STEP 1 — One-time Google Drive setup (needs a browser)
+  Run this on a machine with a browser (your laptop, not the cloud container):
+
+    ./scripts/setup-drive.sh
+
+  It will install rclone if needed and open a Google OAuth page. Sign in with
+  the Google account that owns the Drive you want to use. This creates an
+  rclone remote named gdrive on that machine.
+
+  If you are doing this inside the cloud container and have no browser, use the
+  headless flow:
+    rclone config create gdrive drive scope=drive
+  rclone will print a URL — open it on any device, authenticate, paste the
+  token back.
+
+STEP 2 — Initial upload to Google Drive
+  After setup:
+    ./scripts/drive-sync.sh push
+
+  Verify the files appeared in Google Drive under:
+    My Drive > H4YF > ai-context >
+      harness.md, memory.md, handoff.md, taskboard.md, sessions/
+
+STEP 3 — Point Gemini at the Drive folder
+  Share the H4YF/ai-context folder with the Google account Gemini uses
+  (or make it accessible in whatever way your Gemini integration reads Drive).
+  Tell Gemini to start each session by reading handoff.md.
+
+STEP 4 — Review and merge the PR
+  PR #5: https://github.com/ubiquitousautomation/H4YF/pull/5
+  Look over the files, adjust any wording in harness.md or memory.md to match
+  your preferences, then merge into main.
+
+STEP 5 — Normal workflow after merge
+  Claude session start:
+    ./scripts/drive-sync.sh pull    (if Gemini has made changes)
+
+  Claude session end:
+    (automatic — Stop hook pushes for you)
+
+  Gemini session:
+    Open H4YF/ai-context/ on Google Drive
+    Read handoff.md first
+    Update handoff.md and taskboard.md before closing
+
+================================================================================
+FILES CREATED (summary)
+================================================================================
+
+ai-context/harness.md     Rules for all AI agents in this project
+ai-context/memory.md      Persistent facts, append-only, dated
+ai-context/handoff.md     Current state — read first, update before leaving
+ai-context/taskboard.md   Task status tracker
+ai-context/sessions/      Archive of per-session logs
+scripts/drive-sync.sh     rclone wrapper (push/pull/bisync/status)
+scripts/setup-drive.sh    One-time setup script
+.claude/settings.json     Claude Code harness (Stop hook + permissions)
+CLAUDE.md                 Claude session protocol and quick reference
+GEMINI.md                 Gemini session protocol and quick reference
+SESSION-NOTES.txt         This file
