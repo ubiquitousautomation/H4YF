@@ -40,8 +40,9 @@ cmd_fullsync() {
 }
 
 cmd_pull() {
+  # rclone copy: never deletes local files — safe when Claude has added local-only files not yet pushed
   log "PULL  $REMOTE_DIR -> $LOCAL_DIR"
-  rclone sync "$REMOTE_DIR" "$LOCAL_DIR" --progress --log-file="$LOG_FILE" --log-level INFO
+  rclone copy "$REMOTE_DIR" "$LOCAL_DIR" --progress --log-file="$LOG_FILE" --log-level INFO
   log "PULL  done"
 }
 
