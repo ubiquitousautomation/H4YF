@@ -29,7 +29,7 @@ _(none)_
 - [x] 2026-06-21 — Configure rclone `gdrive` remote with OAuth token
 - [x] 2026-06-21 — Run initial Drive sync — 7 files pushed to `gdrive:H4YF/ai-context`
 - [x] 2026-06-21 — Verified files visible at `gdrive:H4YF/ai-context` ✓
-- [ ] Merge branch `claude/gemini-offline-drive-sync-gur4we` → main
+- [x] 2026-07-04 — Merge branch `claude/gemini-offline-drive-sync-gur4we` → main (PR #5)
 
 ## Todo — Alignment Fixes (from session review 2026-06-21)
 - [x] 2026-06-21 — Conflict resolution strategy documented in `harness.md` (sequential work assumed; human decides on true conflicts)
@@ -57,6 +57,9 @@ _(none)_
 - [x] 2026-06-21 — Handoff updated to current state
 - [x] 2026-06-21 — memory.md updated with full session learnings (Windows env, rclone decisions, conventions)
 - [x] 2026-06-21 — docs/brand-brief.md created as brand discovery template
+- [x] 2026-07-04 — Fixed drive-sync.sh `pull` bug (was destructive `rclone sync`, now safe `rclone copy`)
+- [x] 2026-07-04 — Installed + authenticated rclone on Mac; verified Drive sync live
+- [x] 2026-07-04 — Set up Gemini API bridge on Mac: primary key copied from PC, Mac-portability bug fixed (ubiq-scripts PR #4), 2 more account keys added (3-key rotation pool total), verified with real prompts
 
 ## Backlog
 - [ ] Payment processing integration
