@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  python-scripts:
+    name: Python syntax + smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Syntax-check all marketing scripts
+        run: |
+          set -euo pipefail
+          find marketing/scripts -name '*.py' -print0 | xargs -0 -n1 python3 -m py_compile
+
+      - name: Smoke test — content generator runs without error
+        run: |
+          set -euo pipefail
+          echo "3" | python3 marketing/scripts/h4yf_content_generator_v3.py
+
+  shellcheck:
+    name: Shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run shellcheck on scripts/
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: "./scripts"

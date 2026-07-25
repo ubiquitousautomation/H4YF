@@ -99,9 +99,21 @@ of the script (date, shoe, price, category, optional slug/note).
 Superseded versions are kept under `scripts/archive/` for change history —
 don't run those, they're missing platform coverage and the PDP-link rule.
 
+## CI
+
+`.github/workflows/ci.yml` runs on every push/PR:
+
+- Syntax-checks every script in `marketing/scripts/` (`python3 -m py_compile`)
+- Smoke-tests `h4yf_content_generator_v3.py` actually runs without error
+- Shellchecks `scripts/drive-sync.sh` and `scripts/setup-drive.sh`
+
+This is intentionally minimal — there's no build/deploy step yet (see below).
+It exists to catch a broken script before it merges, not to gate a release.
+
 ## Deployment path (future)
 
-Nothing here runs automatically yet. When ready to operationalize:
+Nothing here runs automatically beyond the CI checks above. When ready to
+operationalize further:
 
 1. **Slug source of truth** — `slugify()` currently derives slugs from the
    shoe name. Once the WooCommerce product catalog is live, swap this for
