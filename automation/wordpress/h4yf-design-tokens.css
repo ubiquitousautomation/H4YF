@@ -1,0 +1,21 @@
+/*
+ * H4YF — Design System Tokens (placeholder)
+ *
+ * This file is intentionally NOT populated with real values here.
+ * The canonical CSS lives in the "H4YF — Script — WordPress One-Click
+ * Setup via REST API" doc in Drive (06 — AUTOMATION SCRIPTS & TOOLS),
+ * inline as a large generated block. A Drive API rate limit blocked
+ * pulling and verifying that content byte-for-byte during this session,
+ * so rather than guess at brand hex values, this is left as a TODO.
+ *
+ * TO POPULATE:
+ *   1. Open the source doc in Drive and copy the $customCss /
+ *      --h4yf-* custom property block into this file.
+ *   2. Verify colors/spacing match the current brand guide in
+ *      07 — BRAND ASSETS before pushing to production.
+ *
+ * h4yf_wp_setup.ps1 (STEP 3) reads this file and pushes it to
+ * WordPress via /wp-json/wp/v2/settings { custom_css }. If this file
+ * is still just this comment block when the script runs, STEP 3 will
+ * silently push an (almost) empty stylesheet — check for that.
+ */
