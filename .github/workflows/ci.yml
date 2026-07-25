@@ -16,10 +16,15 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Syntax-check all marketing scripts
+      - name: Syntax-check all marketing + automation Python scripts
         run: |
           set -euo pipefail
-          find marketing/scripts -name '*.py' -print0 | xargs -0 -n1 python3 -m py_compile
+          find marketing/scripts automation/ebay -name '*.py' -print0 | xargs -0 -n1 python3 -m py_compile
+
+      - name: Smoke test — eBay optimizer demo runs without error
+        run: |
+          set -euo pipefail
+          python3 automation/ebay/h4yf_ebay_optimizer.py
 
       - name: Smoke test — content generator runs without error
         run: |
@@ -50,7 +55,7 @@ jobs:
       - name: Syntax-check Apps Script (.gs is plain JS)
         run: |
           set -euo pipefail
-          for f in automation/wordpress/*.gs automation/woocommerce/*.gs; do
+          for f in automation/wordpress/*.gs automation/woocommerce/*.gs automation/ebay/*.gs; do
             cp "$f" "/tmp/$(basename "$f" .gs).js"
             node --check "/tmp/$(basename "$f" .gs).js"
           done
