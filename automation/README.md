@@ -67,18 +67,40 @@ None of those original values were committed here.
   secrets** (`Settings → Secrets and variables → Actions`), never
   workflow-file literals.
 
-## `h4yf-design-tokens.css` — resolved
+## `h4yf-design-tokens.css` — SUPERSEDED (found 2026-07-25, see below)
 
-Populated with the real design system CSS from the source Drive doc
-(colors, type scale, WooCommerce product grid/button styling, the
-auth-checklist numbered-list component, etc.). One caveat: the final
-media-query rule at the bottom of the source file didn't survive the
-transcription cleanly, so those two lines (`@media(max-width:768px)`
-and `@media(max-width:480px)` — responsive product-grid column counts)
-were reconstructed from the surrounding pattern rather than pulled
-byte-exact. Worth a quick diff against the Drive source next time it's
-open. Verify colors/spacing still match `07 — BRAND ASSETS` before
-pushing to production — this was captured from a June 2026 snapshot.
+This file used to hold the design system CSS pulled from the June 2026
+Drive doc, and `h4yf_wp_setup.ps1` STEP 3 pushed it live via
+`/wp-json/wp/v2/settings.custom_css`.
+
+**That's now wrong on two counts, discovered while checking whether this
+repo's automation should also live in `ubiquitousautomation/ubiq-h4yf-skin`
+(the actual theme repo):**
+
+1. **The palette itself is stale.** The June snapshot has a black/gold
+   palette with Inter typography. The real, currently-locked canon (in
+   `ubiq-h4yf-skin/style.css`, locked 2026-06-22, maintained through at
+   least Sprint 6.6 RC3 as of 2026-07-23) is a charcoal/crimson/orange
+   palette with Bebas Neue (display) + Montserrat (body).
+2. **The deployment model changed.** `ubiq-h4yf-skin` is git-managed and
+   deployed via SFTP directly to `wp-content/themes/h4yf-skin/`. Pushing
+   CSS through the WordPress REST API's customizer setting — what STEP 3
+   did — now fights that deployment instead of complementing it.
+
+**Fix applied:** STEP 3 in `h4yf_wp_setup.ps1` is disabled (logs a
+message and pushes nothing). This CSS file is kept only as a
+labeled-obsolete historical snapshot — do not deploy it. If a real
+design-system change is needed, make it in `ubiq-h4yf-skin/style.css` /
+`assets/skin.css` and deploy through that repo's own process, not this one.
+
+**On the broader question this surfaced** — whether `automation/`'s other
+scripts (SEO pusher, inventory sync, eBay/StockX tools) should also live
+in `ubiq-h4yf-skin` since that's the repo actually running the live
+site: that repo already has its own `docs/strategy/salvage/h4yf_ebay_api_reference.md`
+and `h4yf_stockx_api_reference.md`, plus its own `scripts/images/`
+backfill scripts — so a blind copy risks duplicating/conflicting with
+work already done there. That reconciliation is a separate, larger task
+than fixing this immediate regression risk, and hasn't been done yet.
 
 ## `h4yf_wp_site_builder.gs` — known gap
 

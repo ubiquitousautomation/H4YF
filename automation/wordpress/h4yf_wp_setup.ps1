@@ -108,19 +108,16 @@ foreach ($plugin in $pluginsToInstall) {
     else { ERR "Could not auto-install $($plugin.name) - install manually in Plugins -> Add New" }
 }
 
-# ── STEP 3: Apply Custom CSS ──
-# Design tokens live alongside this script — see h4yf-design-tokens.css.
-# We push it via the WP Customizer's custom_css setting.
-Log "`n=== STEP 3: Applying design system CSS ==="
-$cssPath = Join-Path $PSScriptRoot "h4yf-design-tokens.css"
-if (Test-Path $cssPath) {
-    $customCss = Get-Content -Raw $cssPath
-    $cssResult = WP-API "POST" "/wp-json/wp/v2/settings" @{ custom_css = $customCss }
-    if ($cssResult) { OK "CSS design system applied" }
-    else { ERR "CSS push failed - paste manually: Appearance -> Customize -> Additional CSS" }
-} else {
-    ERR "h4yf-design-tokens.css not found next to this script - skipping"
-}
+# ── STEP 3: Apply Custom CSS — DISABLED, see h4yf-design-tokens.css ──
+# The site's theme (ubiquitousautomation/ubiq-h4yf-skin) is now git-managed and
+# SFTP-deployed directly to wp-content/themes/h4yf-skin/. Pushing CSS through
+# wp-json/wp/v2/settings.custom_css here would fight that deployment and can
+# silently override the real, currently-locked design tokens with a stale copy.
+# See h4yf-design-tokens.css in this folder for the full explanation.
+Log "`n=== STEP 3: Design system CSS — SKIPPED (see h4yf-design-tokens.css) ==="
+Log "  Theme CSS is git-managed in ubiq-h4yf-skin and deployed via SFTP, not this API."
+Log "  Nothing pushed. If you intended to update the theme's CSS, edit style.css /"
+Log "  assets/skin.css in ubiq-h4yf-skin and deploy through that repo's normal process."
 
 # ── STEP 4: WooCommerce settings ──
 Log "`n=== STEP 4: Configuring WooCommerce settings ==="

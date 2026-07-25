@@ -1,15 +1,31 @@
 /*
- * H4YF — Design System Tokens
+ * H4YF — Design System Tokens — SUPERSEDED, kept for historical reference only
  *
- * Pulled from the "H4YF — Script — WordPress One-Click Setup via REST API"
- * doc in Drive (06 — AUTOMATION SCRIPTS & TOOLS), where it lives inline as
- * the $customCss block pushed via /wp-json/wp/v2/settings { custom_css }.
+ * ⚠ DO NOT deploy this file. It is a June 2026 Drive snapshot (black/gold
+ * palette, Inter typography) that predates the current design system.
  *
- * h4yf_wp_setup.ps1 (STEP 3) reads this file and pushes it verbatim.
+ * The real, currently-locked canon lives in a separate repo:
+ * ubiquitousautomation/ubiq-h4yf-skin, style.css (":root" tokens, locked
+ * 2026-06-22, maintained through at least Sprint 6.6 RC3 as of 2026-07-23):
+ *   - Charcoal/crimson/orange palette (--h4yf-charcoal #1C1C1E,
+ *     --h4yf-crimson #C41E1E CTA-only, --h4yf-orange #D4571A hover/focus-only)
+ *   - Display font: Bebas Neue (H1-H3, CTAs) / Body font: Montserrat
+ *   - A full fluid clamp() type scale (H4YF_TYPOGRAPHY_PLAN.md §2)
+ * That theme is git-managed and deployed via SFTP directly to
+ * wp-content/themes/h4yf-skin/ — NOT pushed through the WordPress REST API's
+ * customizer settings the way this file originally was.
  *
- * Verify colors/spacing still match the current brand guide in
- * 07 — BRAND ASSETS before pushing to production — this was captured
- * from a June 2026 snapshot of the setup script.
+ * h4yf_wp_setup.ps1 STEP 3 (which used to push this file's contents via
+ * /wp-json/wp/v2/settings.custom_css) has been disabled for exactly this
+ * reason: pushing this stale copy through the API would silently override
+ * the real, currently-deployed design system on the live site.
+ *
+ * If a design-system change is actually needed, make it in
+ * ubiq-h4yf-skin/style.css (or assets/skin.css for component CSS) and
+ * deploy through that repo's normal process — not here.
+ *
+ * The obsolete June 2026 snapshot below is kept only so the history of what
+ * this script used to push is not lost.
  */
 
 :root{--h4yf-black:#0A0A0A;--h4yf-white:#FAFAFA;--h4yf-gold:#C9A84C;--h4yf-gold-lt:#E8C97A;--h4yf-gray-dk:#1A1A1A;--h4yf-gray:#2D2D2D;--h4yf-gray-mid:#6B6B6B;--h4yf-gray-lt:#F2F2F2;--h4yf-red:#E53E3E;--h4yf-font-head:'Inter','Helvetica Neue',sans-serif;--h4yf-font-body:'Inter','Helvetica Neue',sans-serif;--h4yf-radius-sm:4px;--h4yf-radius-md:8px;--h4yf-radius-lg:16px;--h4yf-shadow:0 4px 20px rgba(0,0,0,.12);--h4yf-transition:all .2s ease;--h4yf-max-width:1280px;--h4yf-gutter:24px}
