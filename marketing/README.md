@@ -11,7 +11,7 @@ that the automation script and any future CI/deploy step actually reads.
 ```
 marketing/
 ├── content-guides/          Per-platform strategy docs (.docx), PHASE-based template
-│   ├── HEAT4YAFEAT_Depop_Content_Guide_v2.docx
+│   ├── HEAT4YAFEAT_Depop_SOP — Shop Operations, Listing & Distribution Guide [v3].docx
 │   ├── HEAT4YAFEAT_YouTube_Content_Guide_v2.docx
 │   ├── HEAT4YAFEAT_Facebook_Content_Guide_v2.docx
 │   ├── HEAT4YAFEAT_TikTok_Content_Guide_v2.docx
@@ -27,6 +27,39 @@ marketing/
         ├── h4yf_content_generator_v1.py
         └── h4yf_content_generator_v2.py
 ```
+
+## Depop — rebuilt to SOP grade (v3)
+
+The Depop guide was the weakest doc in this folder and has been rebuilt against
+the structure of `HEAT4YAFEAT_Whatnot_SOP — Heaters On Heaters Live Selling
+Guide [v2 CORRECTED]` (Drive → `02 — PLATFORM PLAYBOOKS/Whatnot/`), which is the
+quality bar for platform docs.
+
+v2 is deleted rather than archived because it carried two claims that were not
+just stale but inverted, and both pointed inventory *away* from Depop:
+
+1. **"No Depop platform fee — reserve grails for Whatnot."** Depop removed the
+   US selling fee on 18 July 2024. Sellers now pay 0% commission + 3.3% + $0.45
+   processing, making Depop the cheapest marketplace H4YF sells on. At the
+   catalog median pair ($209.99) Depop nets $202.61 against Whatnot's $186.80.
+2. **"Weekly listing refresh to re-index in search."** Refreshing does nothing
+   to ranking in 2026, and repeated low-substance relisting suppresses the
+   seller quality score. The v2 routine spent 15 min/day making ranking worse.
+
+Leaving a superseded doc in place that tells the reader to withhold inventory
+from the highest-margin channel is a live hazard, not history — git preserves
+the old file.
+
+v3 adds what the other guides have and v2 did not: sourced platform benchmarks,
+a four-channel fee comparison, catalog analysis from the live eBay export
+(138 listings, $33,038.62 ask, 71% size 12), the sub-$150 fee arbitrage
+($1,708.86 full-catalog delta vs eBay), seeding waves, automation posture,
+falsification criteria, and Month 1/3/6 targets.
+
+**Depop is also the only active selling channel with no folder under Drive
+`02 — PLATFORM PLAYBOOKS/`, and it appears zero times in
+`heat4yafeat_Platform_Optimization_Guide_2026`.** The doc gap was systemic, not
+just one weak file.
 
 ## Instagram — where it actually lives
 
