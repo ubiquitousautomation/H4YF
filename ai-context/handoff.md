@@ -3,37 +3,46 @@
 > Keep under 500 words. Put detail in `sessions/`. Update before ending every session.
 
 ## Current State
-- **Date**: 2026-07-04
-- **Last Agent**: Claude (Mac) — PR #5 merged, Drive live, Gemini API bridge now live on Mac too
-- **Branch**: `main`
+- **Date**: 2026-07-25
+- **Last Work**: Cross-platform automation audit + design-token regression fix
+- **Branch**: `claude/depop-sneaker-strategy-rbbuuh`
+- **Canonical Site Repo**: `ubiquitousautomation/ubiq-h4yf-skin` (master) — H4YF is secondary/operational only
 
-## What Was Done This Session
-- Reviewed and merged PR #5 (Drive sync infra) into `main`
-- Fixed a real bug in `scripts/drive-sync.sh`: `cmd_pull` used `rclone sync` (destructive —
-  deletes local-only files) despite harness.md documenting pull as safe/additive; switched to
-  `rclone copy` to match the documented behavior
-- Installed rclone on Mac (Homebrew), authenticated `gdrive` remote, verified `H4YF/ai-context`
-  folder already had all 7 files live on Drive from the earlier session
-- Set up the Gemini API bridge (`ubiq-scripts/h4yf_gemini_bridge.ps1`) on Mac:
-  - Copied the primary Gemini API key (`ubiquitousautomation@gmail.com`) from the PC cold
-    mirror to `~/.ubiquitous/secrets/heat4yafeat/gemini_api_key.txt`
-  - Fixed a Mac-portability bug in the bridge script (hardcoded `$env:USERPROFILE` → `$HOME`,
-    which pwsh resolves cross-platform) — ubiq-scripts PR #4, merged
-  - Added 2 more accounts to the key-rotation pool: `joshpyne13@gmail.com` and
-    `jpyne2026@gmail.com` as `gemini_api_key_2.txt` / `gemini_api_key_3.txt`
-  - Confirmed all 3 keys are discovered by the pool logic; ran real prompts through the bridge
-    on Mac and got live Gemini replies (gemini-2.5-flash)
+## What Was Done This Session (2026-07-25)
+
+**Design-token regression FIXED:**
+- Found `h4yf_wp_setup.ps1` STEP 3 was pushing a stale June 2026 design system (black/gold, Inter) over the real canon (charcoal/crimson, Bebas Neue + Montserrat, locked 2026-06-22 in ubiq-h4yf-skin).
+- Root cause: theme now git-managed SFTP-deployed; REST API push would fight the real deployment.
+- **Fix:** Disabled STEP 3 (logs message, pushes nothing). Relabeled `h4yf-design-tokens.css` as historical snapshot. Updated `automation/README.md` to point at ubiq-h4yf-skin as source of truth.
+- Committed to `claude/depop-sneaker-strategy-rbbuuh`, pushed PR #6.
+
+**Consolidated automation findings:**
+- Added "AUTOMATION & DEPLOYMENT ARCHITECTURE" section to ubiq-h4yf-skin's `docs/H4YF_MASTER_PLAN.md`.
+- Documented automation scripts inventory (status + cross-platform risk).
+- Flagged original Drive versions had hardcoded credentials (WC key, WP App Password, eBay key) — none committed here, rotation recommended if originals still active.
+- Deferred broader consolidation question (whether to centralize ALL automation into ubiq-h4yf-skin) — needs Josh/Bill scope + credential strategy decision; not attempted unilaterally.
+
+**Committed & pushed:**
+- H4YF PR #6: fix stale/dangerous CSS push (merged)
+- ubiq-h4yf-skin master: AUTOMATION section + findings (merged f95738d)
 
 ## Current Status
-- [x] PR #5 merged — Drive sync infra live on `main`
-- [x] Drive sync verified live on Mac (`H4YF/ai-context`, 7 files)
-- [x] Gemini API bridge working on Mac with a 3-account key pool (Claude remains primary/orchestrator; Gemini is the stateless bulk worker per harness protocol)
-- [ ] Share/point Gemini (the assistant, not the API) at the Drive folder if a Gemini web/app session ever needs read access directly
-- [ ] Fill in `docs/brand-brief.md` to kick off H4YF project work
+- [x] Design-token regression fixed (STEP 3 disabled, no live risk)
+- [x] Automation inventory audited + documented
+- [x] Security findings flagged (original credentials exposure, mitigation path)
+- [ ] Consolidation decision (deferred — Josh/Bill call)
+- [ ] Credential rotation audit (if originals still active)
 
-## Next Steps (for next Claude/Gemini session)
-- Priority: brand brief → eCommerce platform choice
-- Gemini bulk-work prompts can now go through `h4yf_gemini_bridge.ps1 -Prompt "..."` (or `-Run` to drain `gemini_outbox/`) from either Mac or PC
+## Key Facts for Next Session
+- **ubiq-h4yf-skin is canonical.** All design system, deployment, and live-site code lives there.
+- **H4YF automation is operational/secondary.** It's a versioned mirror of Drive scripts; feeds data to or runs offline.
+- **STEP 3 is disabled.** Won't push stale CSS on next install.
+- **Credential risk known.** Original Drive versions exposed 4 live credentials; none in git. Rotation status unknown.
+
+## Next Steps
+1. **Josh/Bill decision:** Consolidate automation into ubiq-h4yf-skin or keep separate? (deferred, needs scope + cred strategy)
+2. **Security audit:** Cross-reference active creds against originals; rotate if matches found
+3. **Resume normal sprints** on ubiq-h4yf-skin (Sprint 6.6-fix or board-9/2.6 content backfill per ledger)
 
 ## Active Blockers
-None — Drive and Gemini API bridge both live and tested on Mac.
+None for H4YF; cross-platform consolidation blocked on architectural decision (Josh/Bill).
