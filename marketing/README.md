@@ -28,10 +28,61 @@ marketing/
         └── h4yf_content_generator_v2.py
 ```
 
-Instagram's guide is the one exception: it's the original source doc this
-whole template was built from (`HEAT4YAFEAT_Instagram_Content_Guide — @h4yf16
-& @b2ill2323 Strategy [v2 CORRECTED]`), and it stays a Google Doc — pull it
-from Drive if you need it alongside these.
+## Instagram — where it actually lives
+
+Instagram was the one Tier-1 channel with no guide in this folder, which
+consistently made it the thinnest-covered channel in the whole library. That
+gap is now closed, but **not here** — the canonical Instagram playbook lives in
+the site repo:
+
+> **`ubiquitousautomation/ubiq-h4yf-skin` → `docs/INSTAGRAM_PLAYBOOK.md`**
+
+It sits there rather than in this folder because Instagram is wired into the
+automated content pipeline (generation → queue → staged bundle → attribution),
+and that pipeline lives in the skin repo. Keeping the playbook next to the code
+that reads it prevents the two from drifting.
+
+The original Drive source (`HEAT4YAFEAT_Instagram_Content_Guide — @h4yf16 &
+@b2ill2323 Strategy [v2 CORRECTED]`, Drive ID
+`16-LY_U2Sd0mWcTdu3-54Kq2aarmvxq-rI4__POKkVKA`) is superseded by it. The Drive
+doc predates the brand-handle decision below and describes a two-account
+architecture that is now three.
+
+### The brand handle: `@heat4yafeatpresents`
+
+The IG account architecture is now three handles with three distinct jobs:
+
+| Handle | Role | Automation |
+|---|---|---|
+| **`@heat4yafeatpresents`** | **Brand-primary — product, drops, authentication** | Assisted |
+| `@h4yf16` | Legacy handle. Keep, redirect, taper | Assisted |
+| `@b2ill2323` | Founder. Billy's face and voice | **Never automate** |
+
+`heat4yafeatpresents` is not a new brand voice — it is the one already in use.
+Every one of the 449 eBay product descriptions in SEO Sheet Tab 3 opens with
+the literal string **`HEAT4YAFEAT PRESENTS:`**, and the YouTube title
+convention follows it (`heat4yafeat presents Air Jordan 4 'University Blue' —
+Worth $200 in 2026?`). The handle makes a signature that already exists
+addressable. It also reads as curation rather than inventory (matching the
+curator-not-reseller positioning), and it is far more defensible against the
+`heat4yafeet` / `HEATFORYAFEET` impersonator cluster than any short form.
+
+**Seeding is unstarted and blocking** — claim the handle before promoting
+anything to it. Full sequence in the playbook §1.2.
+
+### Instagram in the content flywheel
+
+Instagram consumes the same asset pyramid as every other channel — one filmed
+authentication session feeds YouTube long-form, a Short, TikTok, an IG Reel,
+and IG Stories. The only IG-specific work is the hashtag set and the Story
+frames; **no bespoke shooting.**
+
+One constraint worth knowing before planning anything: Instagram cannot be
+posted to programmatically today (Meta App Review), and **Stories can never be
+— there is no publish endpoint for them at all.** Since the IG cadence is
+Story-heavy by design, plan for permanent partial manual work on this channel.
+The pipeline still generates the caption, crops the image, stamps the UTM, and
+stages a ready-to-post bundle; the human step is paste-and-tap, not write.
 
 ## Content Guide template
 

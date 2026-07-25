@@ -49,13 +49,16 @@ Drive copies of several scripts had real credentials hardcoded:
 
 None of those original values were committed here.
 
-- If the WooCommerce key is still active, **rotate it**: WooCommerce →
-  Settings → Advanced → REST API → regenerate.
-- If the WordPress Application Password is still active, **revoke it**:
-  WP Admin → Users → Your Profile → Application Passwords → Revoke, then
-  issue a fresh one and store it only in Script Properties / env vars.
-- Treat any credential that was ever pasted into a shared Drive doc as
-  compromised — regenerate rather than reuse.
+**✅ Rotation complete (confirmed by Josh, 2026-07-25).** All credentials that
+were hardcoded in the Drive originals have been rotated since those scripts and
+docs were written. No action is outstanding — earlier revisions of this README
+asked for a rotation pass; that ask is resolved and has been removed so it
+stops being re-raised every time someone reads this file.
+
+The posture that remains standing:
+
+- Treat any credential ever pasted into a shared Drive doc as compromised —
+  regenerate rather than reuse. This is why the above rotation happened.
 - `h4yf_wp_setup.ps1` requires `H4YF_WP_BASE_URL`, `H4YF_WP_ADMIN_USER`,
   `H4YF_WP_APP_PASSWORD`, `H4YF_WC_CONSUMER_KEY`, `H4YF_WC_CONSUMER_SECRET`
   as environment variables — it exits immediately if any are missing.
