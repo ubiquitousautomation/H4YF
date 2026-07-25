@@ -1,21 +1,50 @@
 /*
- * H4YF — Design System Tokens (placeholder)
+ * H4YF — Design System Tokens
  *
- * This file is intentionally NOT populated with real values here.
- * The canonical CSS lives in the "H4YF — Script — WordPress One-Click
- * Setup via REST API" doc in Drive (06 — AUTOMATION SCRIPTS & TOOLS),
- * inline as a large generated block. A Drive API rate limit blocked
- * pulling and verifying that content byte-for-byte during this session,
- * so rather than guess at brand hex values, this is left as a TODO.
+ * Pulled from the "H4YF — Script — WordPress One-Click Setup via REST API"
+ * doc in Drive (06 — AUTOMATION SCRIPTS & TOOLS), where it lives inline as
+ * the $customCss block pushed via /wp-json/wp/v2/settings { custom_css }.
  *
- * TO POPULATE:
- *   1. Open the source doc in Drive and copy the $customCss /
- *      --h4yf-* custom property block into this file.
- *   2. Verify colors/spacing match the current brand guide in
- *      07 — BRAND ASSETS before pushing to production.
+ * h4yf_wp_setup.ps1 (STEP 3) reads this file and pushes it verbatim.
  *
- * h4yf_wp_setup.ps1 (STEP 3) reads this file and pushes it to
- * WordPress via /wp-json/wp/v2/settings { custom_css }. If this file
- * is still just this comment block when the script runs, STEP 3 will
- * silently push an (almost) empty stylesheet — check for that.
+ * Verify colors/spacing still match the current brand guide in
+ * 07 — BRAND ASSETS before pushing to production — this was captured
+ * from a June 2026 snapshot of the setup script.
  */
+
+:root{--h4yf-black:#0A0A0A;--h4yf-white:#FAFAFA;--h4yf-gold:#C9A84C;--h4yf-gold-lt:#E8C97A;--h4yf-gray-dk:#1A1A1A;--h4yf-gray:#2D2D2D;--h4yf-gray-mid:#6B6B6B;--h4yf-gray-lt:#F2F2F2;--h4yf-red:#E53E3E;--h4yf-font-head:'Inter','Helvetica Neue',sans-serif;--h4yf-font-body:'Inter','Helvetica Neue',sans-serif;--h4yf-radius-sm:4px;--h4yf-radius-md:8px;--h4yf-radius-lg:16px;--h4yf-shadow:0 4px 20px rgba(0,0,0,.12);--h4yf-transition:all .2s ease;--h4yf-max-width:1280px;--h4yf-gutter:24px}
+*,*::before,*::after{box-sizing:border-box}
+body{font-family:var(--h4yf-font-body);color:var(--h4yf-black);background:var(--h4yf-white);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,h5,h6{font-family:var(--h4yf-font-head);font-weight:800;letter-spacing:-.02em;line-height:1.15;color:var(--h4yf-black)}
+h1{font-size:clamp(2rem,5vw,3.5rem)}h2{font-size:clamp(1.5rem,3.5vw,2.5rem)}h3{font-size:clamp(1.25rem,2.5vw,1.875rem)}
+a{color:var(--h4yf-gold);text-decoration:none;transition:var(--h4yf-transition)}a:hover{color:var(--h4yf-gold-lt)}
+.wp-block-button__link{background:var(--h4yf-gold);color:var(--h4yf-black)!important;font-weight:800;font-size:.95rem;letter-spacing:.05em;text-transform:uppercase;padding:16px 32px;border-radius:var(--h4yf-radius-sm);transition:var(--h4yf-transition)}
+.wp-block-button__link:hover{background:var(--h4yf-gold-lt);transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,168,76,.35)}
+ul.products{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;list-style:none;padding:0;margin:0}
+ul.products li.product{background:var(--h4yf-white);border-radius:var(--h4yf-radius-md);overflow:hidden;box-shadow:var(--h4yf-shadow);transition:var(--h4yf-transition);border:1px solid rgba(0,0,0,.06)}
+ul.products li.product:hover{transform:translateY(-4px);box-shadow:0 8px 40px rgba(0,0,0,.20)}
+ul.products li.product a img{width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--h4yf-gray-lt)}
+ul.products li.product .woocommerce-loop-product__title{font-size:1rem;font-weight:700;padding:16px 16px 4px;color:var(--h4yf-black)}
+ul.products li.product .price{padding:4px 16px 8px;font-size:1.1rem;font-weight:800;color:var(--h4yf-black)}
+ul.products li.product .button{background:var(--h4yf-black);color:var(--h4yf-white)!important;margin:0 16px 16px;width:calc(100% - 32px);text-align:center;padding:12px;border-radius:var(--h4yf-radius-sm);font-size:.85rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;transition:var(--h4yf-transition);display:block}
+ul.products li.product .button:hover{background:var(--h4yf-gold);color:var(--h4yf-black)!important}
+.single-product .single_add_to_cart_button{background:var(--h4yf-gold)!important;color:var(--h4yf-black)!important;font-weight:800;font-size:1rem;letter-spacing:.05em;text-transform:uppercase;padding:18px 40px;border-radius:var(--h4yf-radius-sm);border:none;width:100%;transition:var(--h4yf-transition)}
+.single-product .single_add_to_cart_button:hover{background:var(--h4yf-gold-lt)!important;transform:translateY(-2px)}
+.wc-proceed-to-checkout .checkout-button,#place_order{background:var(--h4yf-gold)!important;color:var(--h4yf-black)!important;font-weight:800;font-size:1.1rem;padding:18px;border-radius:var(--h4yf-radius-sm);width:100%;border:none;letter-spacing:.04em;text-transform:uppercase;transition:var(--h4yf-transition)}
+.site-header,header.wp-block-template-part{background:var(--h4yf-black);position:sticky;top:0;z-index:1000;box-shadow:0 2px 20px rgba(0,0,0,.5)}
+.site-footer,footer.wp-block-template-part{background:var(--h4yf-black);color:rgba(250,250,250,.6);padding:60px var(--h4yf-gutter) 40px}
+.site-footer a{color:rgba(250,250,250,.6);font-size:.9rem;display:block;margin-bottom:8px;transition:var(--h4yf-transition)}
+.site-footer a:hover{color:var(--h4yf-gold)}
+.h4yf-stats-bar h3{color:var(--h4yf-gold)!important;font-size:clamp(2.5rem,5vw,4rem)!important;font-weight:900;margin:0 0 8px}
+.h4yf-stats-bar p{color:rgba(250,250,250,.7)!important;font-size:.85rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin:0}
+.h4yf-auth-list{counter-reset:auth-step;list-style:none;padding:0}
+.h4yf-auth-list li{counter-increment:auth-step;padding:24px 24px 24px 70px;border-left:4px solid var(--h4yf-gold);margin-bottom:20px;background:var(--h4yf-gray-lt);border-radius:0 var(--h4yf-radius-md) var(--h4yf-radius-md) 0;position:relative}
+.h4yf-auth-list li::before{content:counter(auth-step);position:absolute;left:16px;top:50%;transform:translateY(-50%);width:36px;height:36px;background:var(--h4yf-gold);color:var(--h4yf-black);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.9rem}
+.wp-block-details{border:1px solid rgba(0,0,0,.1);border-radius:var(--h4yf-radius-md);margin-bottom:12px;overflow:hidden}
+.wp-block-details summary{padding:20px 24px;font-weight:700;cursor:pointer;list-style:none;position:relative;transition:background .15s ease}
+.wp-block-details summary:hover{background:var(--h4yf-gray-lt)}
+.wp-block-details summary::after{content:'+';position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:1.5rem;font-weight:300;color:var(--h4yf-gold)}
+.wp-block-details[open] summary::after{content:'−'}
+.h4yf-certified-badge{display:inline-flex;align-items:center;gap:8px;background:var(--h4yf-gold);color:var(--h4yf-black);font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:6px 14px;border-radius:100px}
+@media(max-width:768px){:root{--h4yf-gutter:16px}ul.products{grid-template-columns:repeat(2,1fr);gap:12px}}
+@media(max-width:480px){ul.products{grid-template-columns:1fr}}

@@ -14,19 +14,21 @@ automation/
 │   │                                settings, CSS push, site identity
 │   ├── h4yf_wp_site_builder.gs     Apps Script: push page content + print
 │   │                                nav menu structure via WP REST API
-│   └── h4yf-design-tokens.css      Placeholder — see note below
+│   └── h4yf-design-tokens.css      Real design system CSS (see note below)
 └── woocommerce/
-    └── README.md                   WooCommerce-specific settings/notes
-                                     (most WC config lives inside h4yf_wp_setup.ps1)
+    ├── README.md                   WooCommerce-specific settings/notes
+    └── h4yf_inventory_sync.gs      Apps Script: Master Catalog <-> WooCommerce
+                                     bidirectional sync, sale tracking, reports
 ```
 
 ## Security — read this before running anything here
 
-**Both scripts read credentials from environment variables / Script
-Properties. Neither hardcodes a secret.** This matters because the
-original Drive copy of `h4yf_wp_setup.ps1` had a live-looking WooCommerce
-REST API consumer key (`ck_...`) hardcoded in it. That version was **not**
-committed here.
+**Every script here reads credentials from environment variables / Script
+Properties. None hardcodes a secret.** This matters because the original
+Drive copies of `h4yf_wp_setup.ps1` AND `h4yf_inventory_sync.gs` both had
+the same live-looking WooCommerce REST API consumer key (`ck_...`)
+hardcoded — identical value in both files, confirming it's one real key
+reused across scripts. Neither original value was committed here.
 
 - If that key is still active, **rotate it**: WooCommerce → Settings →
   Advanced → REST API → regenerate. Treat any key that was ever pasted
@@ -42,15 +44,18 @@ committed here.
   secrets** (`Settings → Secrets and variables → Actions`), never
   workflow-file literals.
 
-## `h4yf-design-tokens.css` — known gap
+## `h4yf-design-tokens.css` — resolved
 
-This file is a placeholder. The real design system CSS lives inline in
-the source Drive doc as a large generated block; a Drive API rate limit
-during this session blocked pulling and verifying it byte-for-byte, and
-rather than guess at the brand's actual hex values, it was left as a TODO
-with instructions in the file header. Pull it from Drive and paste it in
-before running `h4yf_wp_setup.ps1` STEP 3 for real — until then that step
-pushes an effectively empty stylesheet.
+Populated with the real design system CSS from the source Drive doc
+(colors, type scale, WooCommerce product grid/button styling, the
+auth-checklist numbered-list component, etc.). One caveat: the final
+media-query rule at the bottom of the source file didn't survive the
+transcription cleanly, so those two lines (`@media(max-width:768px)`
+and `@media(max-width:480px)` — responsive product-grid column counts)
+were reconstructed from the surrounding pattern rather than pulled
+byte-exact. Worth a quick diff against the Drive source next time it's
+open. Verify colors/spacing still match `07 — BRAND ASSETS` before
+pushing to production — this was captured from a June 2026 snapshot.
 
 ## `h4yf_wp_site_builder.gs` — known gap
 
@@ -73,8 +78,6 @@ of code review and lets non-engineers update copy without touching code.
 
 ## What's still only in Drive
 
-A WooCommerce **Inventory Sync & Automation Engine** doc exists in
-`06 — AUTOMATION SCRIPTS & TOOLS` that wasn't pulled into this PR — a
-Drive API rate limit hit mid-session. Also still Drive-only: `h4yf_seo_pusher.gs`,
-`h4yf_ebay_image_fetcher.gs`, `h4yf_ebay_optimizer.py`, and the StockX API
-Integration Spec. Worth a follow-up pass once the rate limit clears.
+`h4yf_seo_pusher.gs`, `h4yf_ebay_image_fetcher.gs`, `h4yf_ebay_optimizer.py`,
+and the StockX API Integration Spec haven't been pulled into this repo yet.
+Worth a follow-up pass.
