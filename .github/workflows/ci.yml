@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  python-scripts:
+    name: Python syntax + smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Syntax-check all marketing + automation Python scripts
+        run: |
+          set -euo pipefail
+          find marketing/scripts automation/ebay -name '*.py' -print0 | xargs -0 -n1 python3 -m py_compile
+
+      - name: Smoke test — eBay optimizer demo runs without error
+        run: |
+          set -euo pipefail
+          python3 automation/ebay/h4yf_ebay_optimizer.py
+
+      - name: Smoke test — content generator runs without error
+        run: |
+          set -euo pipefail
+          echo "3" | python3 marketing/scripts/h4yf_content_generator_v3.py
+
+  shellcheck:
+    name: Shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run shellcheck on scripts/
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: "./scripts"
+
+  wordpress-scripts:
+    name: WordPress/WooCommerce script syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Syntax-check Apps Script (.gs is plain JS)
+        run: |
+          set -euo pipefail
+          for f in automation/wordpress/*.gs automation/woocommerce/*.gs automation/ebay/*.gs; do
+            cp "$f" "/tmp/$(basename "$f" .gs).js"
+            node --check "/tmp/$(basename "$f" .gs).js"
+          done
+
+      - name: Syntax-check PowerShell (parse only, no execution)
+        run: |
+          set -euo pipefail
+          pwsh -NoProfile -Command '
+            $ErrorActionPreference = "Stop"
+            Get-ChildItem -Path "automation/wordpress" -Filter *.ps1 | ForEach-Object {
+              Write-Host "Checking $($_.Name)"
+              $tokens = $null
+              $errors = $null
+              [void][System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$tokens, [ref]$errors)
+              if ($errors.Count -gt 0) {
+                $errors | ForEach-Object { Write-Error $_ }
+                exit 1
+              }
+            }
+          '
