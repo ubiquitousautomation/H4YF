@@ -65,6 +65,18 @@ H4YF/
 └── TASKS.md             # Human-readable task board (start here)
 ```
 
+## Whatnot Launch Strategy Playbook
+
+Operational playbook for launching and scaling H4YF on Whatnot (live sneaker auctions).
+
+| Document | Description |
+|----------|-------------|
+| [Launch Strategy](./docs/playbook/whatnot-launch-strategy.md) | Master 180-day launch plan with phases, KPIs, and roadmap |
+| [Show Prep Checklist](./docs/playbook/show-prep-checklist.md) | Pre-show, live-show, and post-show operations |
+| [Pricing Strategy](./docs/playbook/pricing-strategy.md) | Fee math, margin targets, inventory tiering |
+| [Growth Playbook](./docs/playbook/growth-playbook.md) | Follower growth, cross-platform strategy, collab shows |
+| [Content & Brand](./docs/playbook/content-and-brand.md) | Show persona, visual identity, content pillars |
+
 ## Current Status
 
 See `TASKS.md` for the live task board and next steps.
