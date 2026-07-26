@@ -180,5 +180,13 @@ Key files:
 - Manual sync: `./scripts/drive-sync.sh [push|pull|bisync]`
 - Auto-push: fires on every Claude Code session Stop via `.claude/settings.json` hook
 
+## Social API Scripts
+
+`social_apis/` — PowerShell 5.1 scripts for YouTube, Meta (Instagram/Facebook), and TikTok.
+Each script reads credentials from a local secrets path (never committed) — see
+`social_apis/SETUP_GUIDE.md` for the per-platform credential setup. These predate and are
+independent of both memory systems above; they are plain automation scripts, not part of the
+knowledge graph or ai-context.
+
 ## Gemini Access
 Gemini reads/writes `ai-context/` files via Google Drive. See `GEMINI.md` for its session protocol. Gemini does not read or write the knowledge graph — that system is Claude-only for now.
