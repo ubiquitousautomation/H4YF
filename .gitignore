@@ -1,4 +1,65 @@
 .claude/
 *.local.json
+
+# Sync log — can grow large, not needed in history
+.claude/sync.log
+
+# rclone bisync tracking DB
+.cache/
+
+# Session logs are tracked in git so Claude can read Gemini's session history after a pull.
+# To keep them Drive-only instead, uncomment the line below:
+# ai-context/sessions/*.md
+
+# Local env / credentials — never commit these
+.env
+*.secret
+rclone.conf
+*.pem
+*.key
+wp-config.php
+.htpasswd
+
+# Python — bytecode/caches from running marketing/scripts locally
 __pycache__/
 *.pyc
+*.pyo
+.mypy_cache/
+.pytest_cache/
+venv/
+.venv/
+
+# WordPress core/runtime — this repo tracks custom theme/plugin code and
+# content exports, not a full WP install. If a local WP checkout ever
+# lives here, its core files and generated content shouldn't be tracked.
+wp-admin/
+wp-includes/
+wp-content/uploads/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/backup*/
+wp-content/backups/
+*.sql
+*.sql.gz
+error_log
+debug.log
+
+# WooCommerce — generated exports/logs, not source
+wp-content/uploads/woocommerce_*
+wc-logs/
+*.csv.bak
+
+# GitHub Actions — local act(1) runs / workflow scratch
+.github/workflows/*.local.yml
+*.actrc.local
+
+# Node (in case any tooling — e.g. docx/xlsx build scripts — installs deps here)
+node_modules/
+npm-debug.log*
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
