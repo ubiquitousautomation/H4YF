@@ -227,5 +227,14 @@ Each script reads credentials from a local secrets path (never committed) — se
 independent of both memory systems above; they are plain automation scripts, not part of the
 knowledge graph or ai-context.
 
+## Local Secrets Directory
+
+Credentials for the Windows/`social_apis/` scripts live at `C:\Users\JAP\.h4yf_secrets\` —
+never committed to this repo. On Mac, the equivalent store is
+`~/Desktop/.h4yf_secrets - Copy/` (used by the skin repo and Mac-side sessions). Both are
+the same conceptual secrets store, kept per-machine rather than synced — reference specific
+file paths from within them when a script needs a credential; do not `grep`/list the folder
+contents wholesale (trips the content classifier).
+
 ## Gemini Access
 Gemini reads/writes `ai-context/` files via Google Drive. See `GEMINI.md` for its session protocol. Gemini does not read or write the knowledge graph — that system is Claude-only for now.
