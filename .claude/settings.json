@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "python3 .claude/scripts/hooks.py session-start"
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/scripts/hooks.py session-stop"
+          },
+          {
+            "type": "command",
+            "command": "bash scripts/drive-sync.sh push 2>&1 | tail -8"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(bash scripts/drive-sync.sh*)",
+      "Bash(bash scripts/setup-drive.sh*)",
+      "Bash(rclone*)"
+    ]
+  }
+}
