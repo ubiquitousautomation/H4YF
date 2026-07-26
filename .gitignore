@@ -1,3 +1,6 @@
+.claude/
+*.local.json
+
 # Sync log — can grow large, not needed in history
 .claude/sync.log
 
