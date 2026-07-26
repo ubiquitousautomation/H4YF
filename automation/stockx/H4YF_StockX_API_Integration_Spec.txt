@@ -1,0 +1,125 @@
+﻿HEAT4YAFEAT — StockX API Integration Spec
+Prepared by Ubiquitous Solutions | June 7, 2026
+Purpose: (1) Product images source #2 for imageless catalog, (2) Programmatic StockX platform management
+
+
+════════════════════════════════════════════════
+1. ACCESS — APPLY NOW (1-2 week approval)
+════════════════════════════════════════════════
+
+
+StockX has an OFFICIAL public API: developer.stockx.com
+Approval is NOT instant — takes ~1-2 weeks. APPLY IMMEDIATELY so it's ready
+by the time the eBay image pass is done.
+
+
+Steps:
+  1. developer.stockx.com → sign up, authorize the HEAT4YAFEAT StockX account
+  2. Submit developer application:
+       Role: Project Manager / Business Owner
+       Purpose: "Creating a tool to manage my listings and improve sales on the
+                 platform, and to sync inventory with my website."
+  3. On approval: create an API key + application in the portal
+       Callback URL: https://stockx.com/  (or heat4yafeat.com once live)
+  4. You receive: API Key + OAuth Application Credentials (client id/secret)
+
+
+Auth model: OAuth 2.0 (industry standard) + API key header.
+  - App-level + user authorization, same pattern as eBay.
+  - Exact header shape (x-api-key + Bearer token) confirmed in portal post-approval.
+
+
+════════════════════════════════════════════════
+2. THE THREE APIs (what each does for us)
+════════════════════════════════════════════════
+
+
+A. CATALOG API  → IMAGES + market data  [our image source #2]
+   - Search products by style code / SKU / name (e.g. CT8527-400)
+   - Returns product metadata + official StockX product images (clean studio shots)
+   - Also returns market data (lowest ask, highest bid, last sale) — useful for pricing
+   - USE: match catalog style codes -> StockX product -> pull image URL ->
+          push to WooCommerce for items NOT covered by eBay API
+
+
+B. LISTING API  → inventory management (asks)
+   - A "listing" wraps what sellers call an "ask"
+   - Create / update / delete asks programmatically
+   - Asynchronous: write request validated synchronously, returns an operation id;
+     StockX processes the ask on your behalf
+   - USE: list website/eBay inventory to StockX automatically; adjust asks by market data;
+          delist when sold elsewhere (prevents double-selling)
+
+
+C. ORDER API  → sales
+   - Retrieve active + historical sales
+   - USE: pull StockX sales into File 2 (Sales & Platform Analytics) automatically;
+          trigger website stock decrement when a pair sells on StockX
+
+
+════════════════════════════════════════════════
+3. PROGRAMMATIC PLATFORM MANAGEMENT — TARGET ARCHITECTURE
+════════════════════════════════════════════════
+
+
+Unified inventory loop (Master Catalog = source of truth):
+
+
+  Master Catalog (Sheet)
+      |
+      +--> WooCommerce (WC REST API)      [live]
+      +--> eBay (Browse + Sell APIs)      [images now, sync next]
+      +--> StockX (Catalog/Listing/Order) [images source #2, sync next]
+      |
+   Sync engine (Apps Script, runs every 2 hrs):
+      - New catalog item -> create WC product + eBay listing + StockX ask
+      - Sale on ANY channel -> decrement/delist on the other two (no double-sell)
+      - Price change in catalog -> push to all three
+      - Pull orders from eBay + StockX -> File 2 analytics
+
+
+  This replaces / augments List Perfectly ($29/mo) for the eBay+StockX legs with
+  direct API control. Keep List Perfectly only if Grailed/Mercari legs are still wanted.
+
+
+════════════════════════════════════════════════
+4. PLANNED SCRIPT: h4yf_stockx_image_fetcher.gs (build after approval)
+════════════════════════════════════════════════
+
+
+Mirrors h4yf_ebay_image_fetcher.gs:
+  CONFIG: STOCKX_API_KEY, STOCKX_CLIENT_ID, STOCKX_CLIENT_SECRET
+  - _stockxToken_()      : OAuth client-credentials / refresh flow
+  - _searchByStyle_(code): Catalog API search by style code -> product id + image
+  - reads remaining IMAGELESS WC products (those eBay couldn't fill)
+  - matches by Style Code (catalog has style codes: CT8527-400, FV5029-006, etc.)
+  - previewStockxMatch() : dry-run, logs style-code -> StockX product -> image
+  - executeStockxImagePush(): PUT images to WC for matched products
+  - Output: final gap list = items needing in-house shoot
+
+
+  NOTE: Style-code matching is MORE reliable than eBay title matching, because
+  the catalog already stores exact style codes. This pass should be high-accuracy.
+
+
+════════════════════════════════════════════════
+5. COVERAGE EXPECTATION
+════════════════════════════════════════════════
+
+
+  eBay API (source #1):   active listings (~100-270 of 449), title-matched
+  StockX Catalog (src #2): mainstream sneakers by style code (high accuracy)
+                           misses: vintage / variety / 1-of-1 / non-StockX items
+  In-house shoot (src #3): the true remainder (vintage, oddities, items with no
+                           clean style code) — quantified after passes 1 & 2
+
+
+════════════════════════════════════════════════
+6. LICENSING NOTE
+════════════════════════════════════════════════
+
+
+StockX product images via the official Catalog API are intended for approved
+developer use. Confirm usage terms in the developer agreement at approval.
+For maximum ownership + brand consistency, in-house photography remains the
+gold standard for hero/featured products; API images are the fast-coverage path.
